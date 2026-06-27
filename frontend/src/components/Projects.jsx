@@ -3,6 +3,7 @@ import { FolderGit2, X, ExternalLink } from 'lucide-react';
 import mmparfum from '../assets/logocircular.jpeg'
 import ceduca from '../assets/ceduca.jpeg'
 import vitaintegral from '../assets/vitaintegral.jpeg'
+import feteps from '../assets/16-feteps.jpeg'
 
 const projectsData = [
   {
@@ -22,14 +23,6 @@ const projectsData = [
     liveUrl: null
   },
   {
-    title: 'Sistema de Reservas',
-    description: 'Plataforma estruturada para simular reservas. O foco da aplicação é garantir que seja possível criar conta, alugar quarto, editar e cancelar reserva.',
-    techs: ['Python', 'Flask', 'SQLAlchemy', 'SQLite', 'Bootstrap'],
-    github: 'https://github.com/murillomsouza/sistema-reservas',
-    image: null,
-    liveUrl: null
-  },
-  {
     title: 'VitaIntegral',
     description: 'Landing page focada no nicho de saúde e bem-estar. O sistema visa simular uma clinica real, dando detalhes do que fazem, onde estão localizados entre outras informações.',
     techs: ['JavaScript', 'HTML', 'CSS', 'Bootstrap'],
@@ -42,8 +35,16 @@ const projectsData = [
     description: 'Projeto para a FETEPS 2025 de sistema embarcado utilizando o microcontrolador ESP32 e sensor DHT11. Focado em leitura de dados de hardware e processamento de baixo nível.',
     techs: ['C++', 'ESP32', 'Arduino', 'Embarcados'],
     github: 'https://github.com/murillomsouza',
-    image: null,
+    image: feteps,
     liveUrl: 'https://feteps.cps.sp.gov.br/projetos/logchain-4-0-cadeia-fria-inteligente/'
+  },
+  {
+    title: 'Sistema de Reservas',
+    description: 'Plataforma estruturada para simular reservas. O foco da aplicação é garantir que seja possível criar conta, alugar quarto, editar e cancelar reserva.',
+    techs: ['Python', 'Flask', 'SQLAlchemy', 'SQLite', 'Bootstrap'],
+    github: 'https://github.com/murillomsouza/sistema-reservas',
+    image: null,
+    liveUrl: null
   },
   {
     title: 'Sistema-Pedido-e-Produto',
@@ -58,11 +59,34 @@ const projectsData = [
 export default function Projects() {
   const [selectedProject, setSelectedProject] = useState(null);
   
-  // Refs e States para o Carrossel Automático
+  // Refs e States para o Carrossel e Animação de Scroll
   const carouselRef = useRef(null);
+  const sectionRef = useRef(null);
   const [isPaused, setIsPaused] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
 
-  // Efeito de Auto Scroll
+  // Efeito 1: Reveal on Scroll (Repetitivo)
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        // Atualiza a visibilidade dependendo se está na tela ou não
+        setIsVisible(entry.isIntersecting);
+      },
+      { threshold: 0.15 } // Dispara quando 15% da seção está visível
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => {
+      if (sectionRef.current) {
+        observer.unobserve(sectionRef.current);
+      }
+    };
+  }, []);
+
+  // Efeito 2: Auto Scroll do Carrossel
   useEffect(() => {
     const interval = setInterval(() => {
       if (!isPaused && !selectedProject && carouselRef.current) {
@@ -90,9 +114,26 @@ export default function Projects() {
     document.body.style.overflow = 'unset';
   }
 
+  // Função para calcular a posição do mouse no Efeito Lanterna
+  const handleMouseMove = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    
+    e.currentTarget.style.setProperty('--mouse-x', `${x}px`);
+    e.currentTarget.style.setProperty('--mouse-y', `${y}px`);
+  };
+
   return (
-    <section id="projetos" className="py-20 bg-slate-900 text-slate-200 overflow-hidden">
-      <div className="max-w-7xl mx-auto px-6">
+    // bg-gradient-to-b cria a transição suave de cor do Hero (slate-950) para Projetos (slate-900)
+    <section id="projetos" className="py-20 bg-gradient-to-b from-slate-950 to-slate-900 text-slate-200 overflow-hidden">
+      {/* Wrapper animado da seção inteira */}
+      <div 
+        ref={sectionRef}
+        className={`max-w-7xl mx-auto px-6 transition-all duration-1000 ease-out transform ${
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16'
+        }`}
+      >
         
         {/* Cabeçalho */}
         <div className="flex items-center gap-4 mb-12">
@@ -117,30 +158,43 @@ export default function Projects() {
             <div 
               key={index} 
               onClick={() => setSelectedProject(project)}
+              onMouseMove={handleMouseMove}
               className="w-[85vw] sm:w-[350px] md:w-auto flex-none snap-start bg-slate-950 border border-slate-800 rounded-xl p-6 hover:-translate-y-2 hover:border-emerald-500/50 hover:shadow-emerald-900/20 transition-all duration-300 flex flex-col group shadow-lg cursor-pointer relative overflow-hidden"
             >
-              <div className="absolute top-0 right-0 bg-emerald-600 text-xs px-2 py-1 rounded-bl-lg font-medium opacity-0 group-hover:opacity-100 transition-opacity">
-                Ver detalhes
-              </div>
-
-              <div className="flex justify-between items-start mb-4">
-                <FolderGit2 size={36} className="text-emerald-500" strokeWidth={1.5} />
-              </div>
-
-              <h3 className="text-lg font-bold text-slate-200 mb-3 group-hover:text-emerald-400 transition-colors">
-                {project.title}
-              </h3>
               
-              <p className="text-slate-400 text-sm leading-relaxed mb-6 flex-grow line-clamp-3">
-                {project.description}
-              </p>
+              {/* Efeito Lanterna (Glow Dinâmico) */}
+              <div 
+                className="pointer-events-none absolute -inset-px opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-0"
+                style={{
+                  background: 'radial-gradient(400px circle at var(--mouse-x, 0) var(--mouse-y, 0), rgba(16, 185, 129, 0.12), transparent 40%)'
+                }}
+              />
 
-              <div className="flex flex-wrap gap-2 mt-auto pt-4 border-t border-slate-800/50">
-                {project.techs.map((tech, i) => (
-                  <span key={i} className="text-xs font-mono text-emerald-500/80 bg-emerald-950/30 px-2 py-1 rounded-md border border-emerald-900/50">
-                    {tech}
-                  </span>
-                ))}
+              {/* Todo o conteúdo do card deve estar dentro de uma div com z-10 para ficar acima do brilho */}
+              <div className="relative z-10 flex flex-col h-full">
+                <div className="absolute top-[-10px] right-[-10px] bg-emerald-600 text-xs px-2 py-1 rounded-bl-lg rounded-tr-lg font-medium opacity-0 group-hover:opacity-100 transition-opacity">
+                  Ver detalhes
+                </div>
+
+                <div className="flex justify-between items-start mb-4">
+                  <FolderGit2 size={36} className="text-emerald-500" strokeWidth={1.5} />
+                </div>
+
+                <h3 className="text-lg font-bold text-slate-200 mb-3 group-hover:text-emerald-400 transition-colors">
+                  {project.title}
+                </h3>
+                
+                <p className="text-slate-400 text-sm leading-relaxed mb-6 flex-grow line-clamp-3">
+                  {project.description}
+                </p>
+
+                <div className="flex flex-wrap gap-2 mt-auto pt-4 border-t border-slate-800/50">
+                  {project.techs.map((tech, i) => (
+                    <span key={i} className="text-xs font-mono text-emerald-500/80 bg-emerald-950/30 px-2 py-1 rounded-md border border-emerald-900/50">
+                      {tech}
+                    </span>
+                  ))}
+                </div>
               </div>
             </div>
           ))}
