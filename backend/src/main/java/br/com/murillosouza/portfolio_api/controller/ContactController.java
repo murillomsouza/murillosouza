@@ -5,7 +5,9 @@ import br.com.murillosouza.portfolio_api.service.EmailService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
+@CrossOrigin(origins = {"http://localhost:5173", "https://murillosouza.vercel.app"})
 @RestController
 @RequestMapping("/api/contact")
 public class ContactController {
@@ -22,9 +24,7 @@ public class ContactController {
             emailService.sendContactEmail(contactDTO);
             return ResponseEntity.ok("Mensagem enviada com sucesso!");
         } catch (Exception e) {
-            // A LINHA MÁGICA QUE VAI DEDURAR O ERRO NO TERMINAL:
             e.printStackTrace();
-
             return ResponseEntity.internalServerError().body("Erro ao enviar mensagem: " + e.getMessage());
         }
     }
