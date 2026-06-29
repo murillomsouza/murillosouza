@@ -1,40 +1,36 @@
 package br.com.murillosouza.portfolio_api.service;
 
 import br.com.murillosouza.portfolio_api.dto.ContactDTO;
+import com.resend.Resend;
+import com.resend.services.emails.model.SendEmailRequest;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 @Service
 public class EmailService {
 
-    private final JavaMailSender mailSender;
+    @Value("${RESEND_API_KEY}")
+    private String apiKey;
 
-    @Value("${portfolio.mail.to}")
+    @Value("${MY_EMAIL_RECEIVER}")
     private String toEmail;
 
-    public EmailService(JavaMailSender mailSender) {
-        this.mailSender = mailSender;
-    }
-
     public void sendContactEmail(ContactDTO contactDTO) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("onboarding@resend.dev");
+        Resend resend = new Resend(apiKey);
 
-        message.setTo(toEmail);
-        message.setSubject("Novo Contato do Portfólio - " + contactDTO.name());
+        SendEmailRequest params = SendEmailRequest.builder()
+                .from("onboarding@resend.dev")
+                .to(toEmail)
+                .subject("Novo Contato do Portfólio - " + contactDTO.name())
+                .html("<strong>Nome:</strong> " + contactDTO.name() + "<br>" +
+                        "<strong>E-mail:</strong> " + contactDTO.email() + "<br><br>" +
+                        "<strong>Mensagem:</strong><br>" + contactDTO.message())
+                .build();
 
-        String body = String.format(
-                "Você recebeu uma nova mensagem do seu portfólio.\n\n" +
-                        "Nome: %s\n" +
-                        "E-mail (Responder para): %s\n\n" +
-                        "Mensagem:\n%s",
-                contactDTO.name(), contactDTO.email(), contactDTO.message()
-        );
-
-        message.setText(body);
-
-        mailSender.send(message);
+        try {
+            resend.emails().send(params);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao enviar e-mail via API REST: " + e.getMessage());
+        }
     }
 }

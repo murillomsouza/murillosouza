@@ -14,7 +14,7 @@ public class WebConfig {
     @Bean
     public CorsFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
-        
+
         config.setAllowedOrigins(Arrays.asList(
                 "http://localhost:5173",
                 "https://murillosouza.vercel.app"
