@@ -29,7 +29,7 @@ export default function Contact() {
       message: e.target.message.value
     };
 
-    const API_BASE_URL = 'https://portfolio-api-murillo.onrender.com';
+    const API_BASE_URL = 'https://murillosouza.onrender.com';
 
     try {
       const response = await fetch(`${API_BASE_URL}/api/contact`, {
