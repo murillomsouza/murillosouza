@@ -15,7 +15,6 @@ const planetarySystem = [
     size: 350, 
     speedClass: 'spin-2',
     counterClass: 'counter-spin-2',
-    // 6 Planetas distribuídos (0, 60, 120, 180, 240, 300)
     planets: [
       { name: 'Java', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/java/java-original.svg', angle: 0 },
       { name: 'Spring', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/spring/spring-original.svg', angle: 60 },
@@ -29,7 +28,6 @@ const planetarySystem = [
     size: 480, 
     speedClass: 'spin-3',
     counterClass: 'counter-spin-3',
-    // 3 Planetas distribuídos
     planets: [
       { name: 'JavaScript', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg', angle: 90 },
       { name: 'React', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg', angle: 210 },
@@ -40,8 +38,10 @@ const planetarySystem = [
 
 export default function About() {
   const sectionRef = useRef(null);
+  const canvasRef = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
 
+  // Efeito Reveal on Scroll
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => setIsVisible(entry.isIntersecting),
@@ -54,6 +54,91 @@ export default function About() {
     };
   }, []);
 
+  // Animação de Warp Speed (Apenas Mobile)
+  useEffect(() => {
+    // Só inicializa o canvas se a tela for menor que 1024px (tamanho onde os planetas somem)
+    if (window.innerWidth >= 1024) return;
+
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    let animationFrameId;
+    let stars = [];
+
+    const resizeCanvas = () => {
+      canvas.width = canvas.parentElement.offsetWidth;
+      canvas.height = canvas.parentElement.offsetHeight;
+      initStars();
+    };
+
+    const initStars = () => {
+      stars = [];
+      const numStars = 100;
+      for (let i = 0; i < numStars; i++) {
+        stars.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          z: Math.random() * canvas.width,
+          radius: Math.random() * 1.5 + 0.5,
+          speed: Math.random() * 0.5 + 0.2 // Velocidade lenta por padrão
+        });
+      }
+    };
+
+    let scrollSpeedOffset = 0;
+    const handleScroll = () => {
+      scrollSpeedOffset = 2; // Acelera quando rola a tela
+      setTimeout(() => { scrollSpeedOffset = 0; }, 100);
+    };
+
+    const animate = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      for (let i = 0; i < stars.length; i++) {
+        let star = stars[i];
+
+        // Move a estrela para baixo com base na velocidade + offset do scroll
+        star.y += star.speed + scrollSpeedOffset;
+
+        // Se a estrela sair da tela por baixo, volta para o topo
+        if (star.y > canvas.height) {
+          star.y = 0;
+          star.x = Math.random() * canvas.width;
+        }
+
+        // Desenhar estrela
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+        ctx.fillStyle = i % 5 === 0 ? 'rgba(16, 185, 129, 0.8)' : 'rgba(255, 255, 255, 0.5)'; // Algumas estrelas são esmeralda
+        ctx.fill();
+
+        // Rastro leve (Motion Blur)
+        if (scrollSpeedOffset > 0) {
+          ctx.beginPath();
+          ctx.moveTo(star.x, star.y);
+          ctx.lineTo(star.x, star.y - 15);
+          ctx.strokeStyle = ctx.fillStyle;
+          ctx.lineWidth = star.radius;
+          ctx.stroke();
+        }
+      }
+      animationFrameId = requestAnimationFrame(animate);
+    };
+
+    window.addEventListener('resize', resizeCanvas);
+    window.addEventListener('scroll', handleScroll);
+    
+    resizeCanvas();
+    animate();
+
+    return () => {
+      window.removeEventListener('resize', resizeCanvas);
+      window.removeEventListener('scroll', handleScroll);
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, []);
+
   const getPlanetPosition = (angle) => ({
     top: `${50 + 50 * Math.sin((angle * Math.PI) / 180)}%`,
     left: `${50 + 50 * Math.cos((angle * Math.PI) / 180)}%`,
@@ -63,6 +148,7 @@ export default function About() {
   return (
     <section id="sobre" className="py-24 bg-slate-950 text-slate-200 overflow-hidden relative">
       
+      {/* Estilos para a animação dos planetas no Desktop */}
       <style>
         {`
           @keyframes orbit {
@@ -88,6 +174,11 @@ export default function About() {
           .counter-spin-3 { animation: counter-orbit 50s linear infinite; }
         `}
       </style>
+
+      {/* Canvas do Warp Speed - Visível apenas no Mobile (lg:hidden) */}
+      <div className="absolute inset-0 z-0 lg:hidden overflow-hidden pointer-events-none opacity-40">
+        <canvas ref={canvasRef} className="w-full h-full" />
+      </div>
 
       <div 
         ref={sectionRef}
@@ -120,25 +211,26 @@ export default function About() {
 
             {/* Destaques rápidos */}
             <div className="grid grid-cols-2 gap-4 pt-6">
-              <div className="p-4 bg-slate-900 border border-slate-800 rounded-lg shadow-inner">
+              {/* Note o backdrop-blur adicionado para as caixas se destacarem sobre as estrelas no mobile */}
+              <div className="p-4 bg-slate-900/80 backdrop-blur-md border border-slate-800 rounded-lg shadow-inner">
                 <h4 className="text-emerald-500 font-mono mb-2 flex items-center gap-2">
                   <Server size={16} /> Backend
                 </h4>
                 <p className="text-sm text-slate-400">Java, Spring Boot, Python, Flask</p>
               </div>
-              <div className="p-4 bg-slate-900 border border-slate-800 rounded-lg shadow-inner">
+              <div className="p-4 bg-slate-900/80 backdrop-blur-md border border-slate-800 rounded-lg shadow-inner">
                 <h4 className="text-emerald-500 font-mono mb-2 flex items-center gap-2">
                   <Network size={16} /> Arquitetura
                 </h4>
                 <p className="text-sm text-slate-400">Camadas, API REST, UML, Padrões</p>
               </div>
-              <div className="p-4 bg-slate-900 border border-slate-800 rounded-lg shadow-inner">
+              <div className="p-4 bg-slate-900/80 backdrop-blur-md border border-slate-800 rounded-lg shadow-inner">
                 <h4 className="text-emerald-500 font-mono mb-2 flex items-center gap-2">
                   <Database size={16} /> Bancos
                 </h4>
                 <p className="text-sm text-slate-400">MySQL, MongoDB, SQLAlchemy</p>
               </div>
-              <div className="p-4 bg-slate-900 border border-slate-800 rounded-lg shadow-inner">
+              <div className="p-4 bg-slate-900/80 backdrop-blur-md border border-slate-800 rounded-lg shadow-inner">
                 <h4 className="text-emerald-500 font-mono mb-2 flex items-center gap-2">
                   <Code2 size={16} /> Frontend
                 </h4>
@@ -147,8 +239,8 @@ export default function About() {
             </div>
           </div>
 
-          {/* Coluna da Direita: Sistema Planetário */}
-          <div className="hidden lg:flex justify-center items-center relative h-[550px]">
+          {/* Coluna da Direita: Sistema Planetário (Apenas Desktop) */}
+          <div className="hidden lg:flex justify-center items-center relative h-[550px] z-20">
             
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-emerald-900/10 rounded-full blur-[100px]"></div>
 
@@ -186,7 +278,6 @@ export default function About() {
                             src={planet.icon} 
                             alt={planet.name} 
                             className="w-full h-full object-contain"
-                            // Adicionado um filtro para ícones que são pretos nativamente (ex: Flask) ficarem visíveis no fundo escuro
                             style={planet.name === 'Flask' ? { filter: 'invert(1) brightness(2)' } : {}}
                           />
                         </div>
