@@ -6,8 +6,8 @@ export default function Contact() {
   const [isVisible, setIsVisible] = useState(false);
   const [formState, setFormState] = useState('idle');
 
-  // 🔴 CHAVE MESTRA: Mude para 'false' quando o backend estiver pronto
-  const isMaintenanceMode = true; 
+  //Mude para 'false' quando o backend estiver pronto
+  const isMaintenanceMode = false; 
 
   // Efeito Reveal on Scroll
   useEffect(() => {
@@ -24,8 +24,6 @@ export default function Contact() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (isMaintenanceMode) return; // Bloqueia o envio se estiver em manutenção
-
     setFormState('loading');
     
     const payload = {
@@ -34,36 +32,30 @@ export default function Contact() {
       message: e.target.message.value
     };
 
-    const API_BASE_URL = 'https://murillosouza.onrender.com';
-
-    // Timeout de 10 segundos para não deixar o usuário esperando infinitamente
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 10000);
+    const FORMSPREE_URL = 'https://formspree.io/f/mwvdwolb';
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/contact`, {
+      const response = await fetch(FORMSPREE_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Accept': 'application/json'
         },
-        body: JSON.stringify(payload),
-        signal: controller.signal
+        body: JSON.stringify(payload)
       });
-
-      clearTimeout(timeoutId);
 
       if (response.ok) {
         setFormState('success');
         e.target.reset(); 
       } else {
-        console.error("O servidor rejeitou a requisição.");
+        console.error("Erro na resposta do Formspree");
         setFormState('idle'); 
-        alert("Não foi possível enviar a mensagem. Verifique os dados inseridos.");
+        alert("Não foi possível enviar a mensagem. Tente novamente.");
       }
     } catch (error) {
-      console.error("Erro na comunicação com a API:", error);
+      console.error("Erro na comunicação:", error);
       setFormState('idle');
-      alert("Tempo limite excedido ou servidor indisponível. Tente novamente mais tarde.");
+      alert("Houve um problema de conexão. Tente novamente mais tarde.");
     } finally {
       if (formState !== 'idle') {
         setTimeout(() => setFormState('idle'), 4000);
