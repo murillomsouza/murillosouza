@@ -1,76 +1,74 @@
-# Portfólio Pessoal - Murillo Souza
+# 🚀 Murillo Souza | Portfólio Pessoal
 
-Este repositório contém o código-fonte do meu portfólio pessoal, projetado para apresentar meus projetos, habilidades e experiências como Desenvolvedor focado em Backend, Arquitetura de Software e Sistemas Embarcados.
+[![Deploy status](https://img.shields.io/badge/Deploy-Vercel-black?logo=vercel)](#)
+[![React](https://img.shields.io/badge/React-18.2.0-blue?logo=react&logoColor=white)](#)
+[![Vite](https://img.shields.io/badge/Vite-5.0-646CFF?logo=vite&logoColor=white)](#)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?logo=tailwind-css&logoColor=white)](#)
 
-A aplicação foi estruturada em um ambiente containerizado completo, separando as camadas de Frontend e Backend para garantir escalabilidade e padronização.
+Portfólio pessoal desenvolvido para apresentar meus projetos, habilidades e formas de contato. O design foi construído com uma estética "Sci-Fi / Terminal", refletindo minha paixão por tecnologia, astronomia e o ecossistema de desenvolvimento (especialmente Backend e Arquitetura).
 
-## Arquitetura do Projeto
-
-O projeto adota uma arquitetura em camadas (separação de responsabilidades), orquestrada via Docker Compose.
-
-* **Frontend:** Aplicação Single Page (SPA) desenvolvida com React e Vite.
-* **Backend:** API REST desenvolvida em Java com Spring Boot (Em desenvolvimento).
-* **Infraestrutura:** Docker e Docker Compose para padronização do ambiente de desenvolvimento e deploy.
-
-## Tecnologias Utilizadas
-
-### Frontend
-* React.js (Vite)
-* Tailwind CSS v4 (Estilização utilitária)
-* Lucide React (Ícones vetoriais SVG)
-* React Simple Typewriter (Animações de digitação)
-
-### Backend
-* Java
-* Spring Boot
-* Maven
-
-### Infraestrutura & Ferramentas
-* Docker & Docker Compose
-* Git & GitHub
-
-## Como rodar o projeto localmente
-
-Pré-requisitos: Você precisa ter o **Docker** e o **Docker Compose** instalados na sua máquina.
-
-1. Clone o repositório:
-```bash
-git clone [https://github.com/murillomsouza/meu-portfolio.git](https://github.com/murillomsouza/meu-portfolio.git)
-```
-
-2. Acesse a pasta do projeto:
-```bash
-cd meu-portfolio
-```
-
-3. Suba os containers em segundo plano:
-```bash
-docker compose up -d --build
-```
-
-4. Acesse a aplicação:
-* O frontend estará disponível em: http://localhost:5173
-* O backend (API) estará disponível em: http://localhost:8080 (Em breve)
-
-## Estrutura de Pastas
-
-```text
-/
-├── frontend/             # Aplicação React/Vite
-│   ├── src/              # Componentes, estilos e lógicas do UI
-│   ├── public/           # Assets estáticos
-│   └── Dockerfile        # Containerização do front
-├── backend/              # Aplicação Java/Spring Boot
-│   └── Dockerfile        # Containerização do back
-├── docker-compose.yml    # Orquestração dos containers
-└── README.md             # Documentação do projeto
-```
-
-## Contato
-
-* **E-mail:** murillosouza997@gmail.com
-* **LinkedIn:** [linkedin.com/in/murillo-de-souza](https://linkedin.com/in/murillo-de-souza)
-* **GitHub:** [github.com/murillomsouza](https://github.com/murillomsouza)
+🌍 **Live Preview:** [murillosouza.vercel.app](https://murillosouza.vercel.app/)
 
 ---
-*Desenvolvido por Murillo Souza.*
+
+## ✨ Funcionalidades e UI/UX
+
+O projeto foi pensado para ter alta interatividade e performance, adaptando-se perfeitamente a diferentes tamanhos de tela:
+
+* **Hero Interativo (Rede Neural):** Um `<canvas>` de fundo com partículas interativas que reagem à gravidade do mouse.
+* **Sistema Planetário (Desktop):** Seção de habilidades onde as tecnologias orbitam ao redor de um "núcleo" Linux.
+* **Warp Speed Parallax (Mobile):** Degradação graciosa no mobile, substituindo os planetas por uma chuva de estrelas otimizada e fluida.
+* **Contato via Terminal:** Um formulário de contato com interface inspirada em linha de comando (`contact.sh`), integrado de forma serverless.
+
+---
+
+## 🛠️ Tecnologias Utilizadas
+
+Este projeto é uma Single Page Application (SPA) 100% estática, utilizando as seguintes tecnologias:
+
+* **[React.js](https://react.dev/)** - Biblioteca principal para construção de interfaces.
+* **[Vite](https://vitejs.dev/)** - Bundler ultrarrápido para o ambiente de desenvolvimento.
+* **[Tailwind CSS](https://tailwindcss.com/)** - Framework utilitário para estilização e responsividade.
+* **[Lucide React](https://lucide.dev/)** - Biblioteca de ícones limpos e modernos.
+* **[React Simple Typewriter](https://www.npmjs.com/package/react-simple-typewriter)** - Efeito de digitação no título.
+* **[Formspree](https://formspree.io/)** - Integração Serverless para o envio de e-mails diretamente do frontend, sem necessidade de backend próprio.
+
+---
+
+## 🚀 Como rodar o projeto localmente
+
+Siga as instruções abaixo para rodar uma cópia do projeto na sua máquina local:
+
+### 1. Clone o repositório
+git clone https://github.com/murillomsouza/portfolio-murillosouza.git
+cd portfolio-murillosouza/frontend
+
+### 2. Instale as dependências
+npm install
+
+### 3. Configuração do Formulário de Contato
+Para o formulário de contato funcionar localmente, você precisa ter uma conta no [Formspree](https://formspree.io/).
+1. Crie um novo formulário no Formspree.
+2. Copie a URL do endpoint fornecida.
+3. No arquivo `src/components/Contact.jsx`, substitua a constante `FORMSPREE_URL` pela sua URL:
+   
+   const FORMSPREE_URL = 'https://formspree.io/f/sua_chave_aqui';
+
+### 4. Inicie o servidor de desenvolvimento
+npm run dev
+
+O projeto estará rodando em `http://localhost:5173`.
+
+---
+
+## 👨‍💻 Autor
+
+**Murillo Souza**
+* Estudante na Fatec
+* Desenvolvedor focado em Backend, Engenharia de Software e Arquitetura de Sistemas.
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com/in/murillo-de-souza)
+[![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/murillomsouza)
+
+---
+*Desenvolvido com ☕ e muita curiosidade.*
