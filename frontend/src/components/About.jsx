@@ -237,9 +237,9 @@ export default function About() {
               </div>
             </div>
 
-            {/* Destaques rápidos (Arsenal Tático) */}
+            {/* Destaques rápidos */}
             <div>
-              <p className="text-xs font-mono text-emerald-500/70 mb-4 uppercase tracking-widest">[{'>'}] Arsenal Tático</p>
+              <p className="text-xs font-mono text-emerald-500/70 mb-4 uppercase tracking-widest">[{'>'}] Conhecimento Técnico</p>
               <div className="grid grid-cols-2 gap-4">
                 <div className="p-4 bg-slate-900/80 backdrop-blur-md border border-slate-800 rounded-lg group hover:border-emerald-500/30 transition-colors">
                   <h4 className="text-emerald-500 font-mono mb-2 flex items-center gap-2">
