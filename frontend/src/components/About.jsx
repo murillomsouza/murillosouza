@@ -34,19 +34,19 @@ const planetarySystem = [
 const personalLogs = [
   {
     id: 'origem',
-    title: '01. Origem',
+    title: '01. Sobre mim',
     icon: User,
     content: 'Sempre fui um cara muito curioso — seja para entender como o universo funciona ou como um software roda por trás das telas. Atualmente sou estudante na Fatec e passo boa parte do meu tempo no meu ambiente Linux explorando novas tecnologias.'
   },
   {
     id: 'foco',
-    title: '02. Foco Tático',
+    title: '02. Foco',
     icon: Target,
     content: 'Hoje, construir sistemas bem estruturados é a minha praia. O Backend é meu terreno: adoro trabalhar com Java, desenhar Arquitetura em Camadas e criar APIs utilizando Python e Flask. Até brinco com ESP32 e C++ pela integração com o mundo físico, mas meu foco real está na engenharia de software e na modelagem de dados.'
   },
   {
     id: 'offduty',
-    title: '03. Off-Duty',
+    title: '03. Tempo Livre',
     icon: Coffee,
     content: 'Quando não estou com o terminal aberto pesquisando sobre padrões de arquitetura ou lendo algo sobre o espaço sideral, você provavelmente vai me encontrar maratonando Star Wars ou tentando codar enquanto meus gatos decidem que o meu teclado é o melhor lugar da casa para dormir.'
   }
@@ -58,7 +58,6 @@ export default function About() {
   const [isVisible, setIsVisible] = useState(false);
   const [activeLog, setActiveLog] = useState('origem');
 
-  // Efeito Reveal on Scroll
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => setIsVisible(entry.isIntersecting),
@@ -68,7 +67,6 @@ export default function About() {
     return () => { if (sectionRef.current) observer.unobserve(sectionRef.current); };
   }, []);
 
-  // Animação de Warp Speed (Apenas Mobile)
   useEffect(() => {
     if (window.innerWidth >= 1024) return;
     const canvas = canvasRef.current;
@@ -185,46 +183,41 @@ export default function About() {
       >
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start lg:items-center">
           
-          {/* Coluna da Esquerda: Textos / Abas */}
           <div className="flex flex-col space-y-8 relative z-20">
             <div className="flex items-center gap-4">
               <h2 className="text-3xl md:text-4xl font-bold text-white">Sobre Mim</h2>
               <div className="h-px bg-slate-700 flex-grow ml-4"></div>
             </div>
 
-            {/* Radar Mobile (Exibido apenas em telas menores) */}
+            {/* Radar Mobile */}
             <div className="flex lg:hidden justify-center items-center py-6">
               <div className="relative w-40 h-40 rounded-full border border-emerald-500/30 flex items-center justify-center bg-slate-900/50 backdrop-blur-md shadow-[0_0_30px_rgba(16,185,129,0.1)]">
-                {/* Feixe do Radar */}
                 <div className="absolute inset-0 radar-sweep"></div>
-                {/* Anéis internos */}
                 <div className="absolute inset-4 rounded-full border border-dashed border-emerald-500/20"></div>
                 <div className="absolute inset-10 rounded-full border border-emerald-500/10"></div>
-                {/* Núcleo */}
                 <div className="relative z-10 p-3 bg-slate-800 rounded-full border border-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.5)]">
                   <TerminalSquare size={24} className="text-emerald-400" />
                 </div>
-                {/* Ping de elemento encontrado */}
                 <div className="absolute top-4 right-8 w-2 h-2 bg-emerald-400 rounded-full shadow-[0_0_5px_rgba(16,185,129,1)] animate-pulse"></div>
               </div>
             </div>
 
-            {/* Interface de Datapad (Abas) */}
+            {/* Interface de Datapad */}
             <div className="bg-slate-900/80 backdrop-blur-md border border-slate-800 rounded-xl overflow-hidden shadow-xl">
-              {/* Cabeçalho das Abas */}
-              <div className="flex overflow-x-auto border-b border-slate-800 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              
+              <div className="grid grid-cols-3 border-b border-slate-800">
                 {personalLogs.map((log) => (
                   <button
                     key={log.id}
                     onClick={() => setActiveLog(log.id)}
-                    className={`flex items-center gap-2 px-5 py-4 text-sm font-mono whitespace-nowrap transition-colors border-b-2 ${
+                    className={`flex flex-col md:flex-row items-center justify-center gap-1.5 md:gap-2 py-3 px-1 md:px-4 text-[11px] sm:text-xs md:text-sm font-mono transition-colors border-b-2 ${
                       activeLog === log.id 
                         ? 'border-emerald-500 text-emerald-400 bg-slate-800/50' 
                         : 'border-transparent text-slate-500 hover:text-slate-300 hover:bg-slate-800/30'
                     }`}
                   >
-                    <log.icon size={16} />
-                    {log.title}
+                    <log.icon size={18} className="md:w-4 md:h-4" />
+                    <span className="text-center leading-tight truncate w-full md:w-auto">{log.title}</span>
                   </button>
                 ))}
               </div>
@@ -237,9 +230,9 @@ export default function About() {
               </div>
             </div>
 
-            {/* Destaques rápidos */}
+            {/* Destaques*/}
             <div>
-              <p className="text-xs font-mono text-emerald-500/70 mb-4 uppercase tracking-widest">[{'>'}] Conhecimento Técnico</p>
+              <p className="text-xs font-mono text-emerald-500/70 mb-4 uppercase tracking-widest">[{'>'}] CONHECIMENTO TÉCNICO</p>
               <div className="grid grid-cols-2 gap-4">
                 <div className="p-4 bg-slate-900/80 backdrop-blur-md border border-slate-800 rounded-lg group hover:border-emerald-500/30 transition-colors">
                   <h4 className="text-emerald-500 font-mono mb-2 flex items-center gap-2">
@@ -274,7 +267,6 @@ export default function About() {
             
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-emerald-900/10 rounded-full blur-[100px]"></div>
 
-            {/* Núcleo (Core) */}
             <div 
               className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 bg-slate-900 border-2 border-emerald-500 rounded-full shadow-[0_0_30px_rgba(16,185,129,0.3)] z-10 flex items-center justify-center p-4 hover:scale-110 transition-transform cursor-pointer pointer-events-auto"
               title="Linux"
@@ -286,7 +278,6 @@ export default function About() {
               />
             </div>
 
-            {/* Renderização Dinâmica das Órbitas */}
             {planetarySystem.map((orbit, index) => (
               <div 
                 key={`orbit-${index}`}
