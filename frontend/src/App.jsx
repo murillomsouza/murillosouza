@@ -4,6 +4,7 @@ import Hero from './components/Hero';
 import About from './components/About';
 import Projects from './components/Projects';
 import Contact from './components/Contact';
+import TimeLine from './components/TimeLine';
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -16,6 +17,7 @@ export default function App() {
         <main className="animate-fade-in">
           <Hero />
           <About />
+          <TimeLine />
           <Projects />
           <Contact />
         </main>
